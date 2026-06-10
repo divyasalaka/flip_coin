@@ -43,15 +43,41 @@
       </div>
     </div>
 
+    <!-- Balance -->
+    <div class="balance-bar">
+      <div class="balance-box">
+        <span class="balance-label">Balance</span>
+        <span class="balance-amount" id="balance">$100</span>
+      </div>
+      <div class="balance-box">
+        <span class="balance-label">Bet</span>
+        <div class="bet-controls">
+          <button class="bet-btn" onclick="changeBet(-5)">−</button>
+          <span class="bet-amount" id="bet-amount">$10</span>
+          <button class="bet-btn" onclick="changeBet(5)">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Prediction -->
+    <div class="prediction-section">
+      <p class="prediction-label">Your prediction</p>
+      <div class="prediction-btns">
+        <button class="predict-btn" id="predict-heads" onclick="setPrediction('heads')">Heads</button>
+        <button class="predict-btn" id="predict-tails" onclick="setPrediction('tails')">Tails</button>
+      </div>
+    </div>
+
     <div class="coin-area">
       <div class="coin" id="coin">
         <div class="coin-face heads">H</div>
         <div class="coin-face tails">T</div>
       </div>
       <div class="result-label" id="result-label"></div>
+      <div class="payout-label" id="payout-label"></div>
     </div>
 
-    <button id="flip-btn" onclick="flipCoin()">Flip Coin</button>
+    <button id="flip-btn" onclick="flipCoin()" disabled>Pick a side first</button>
 
     <div class="stats">
       <div class="stat-box">
