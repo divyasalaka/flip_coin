@@ -134,7 +134,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 36px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
   gap: 12px;
 }
@@ -174,6 +174,127 @@ body {
   color: #e0e0e0;
 }
 
+/* ── Balance Bar ── */
+.balance-bar {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.balance-box {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px;
+  padding: 14px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  min-width: 130px;
+}
+
+.balance-label {
+  font-size: 0.72rem;
+  color: #8888aa;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+}
+
+.balance-amount {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #f0c040;
+  transition: color 0.3s;
+}
+
+.balance-amount.win-flash { color: #4cff91; }
+.balance-amount.lose-flash { color: #ff6b6b; }
+
+.bet-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bet-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.07);
+  color: #e0e0e0;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+
+.bet-btn:hover { background: rgba(255,255,255,0.15); }
+
+.bet-amount {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #f0c040;
+  min-width: 48px;
+  text-align: center;
+}
+
+/* ── Prediction ── */
+.prediction-section {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.prediction-label {
+  font-size: 0.8rem;
+  color: #8888aa;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 10px;
+}
+
+.prediction-btns {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.predict-btn {
+  padding: 10px 32px;
+  border-radius: 50px;
+  border: 2px solid rgba(255,255,255,0.15);
+  background: rgba(255,255,255,0.05);
+  color: #aaaacc;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 1px;
+  transition: all 0.15s;
+}
+
+.predict-btn:hover {
+  border-color: rgba(240, 192, 64, 0.4);
+  color: #e0e0e0;
+}
+
+.predict-btn.selected-heads {
+  background: rgba(249, 217, 118, 0.18);
+  border-color: #f9d976;
+  color: #f9d976;
+  box-shadow: 0 0 14px rgba(249, 217, 118, 0.25);
+}
+
+.predict-btn.selected-tails {
+  background: rgba(192, 192, 192, 0.15);
+  border-color: #c0c0c0;
+  color: #c0c0c0;
+  box-shadow: 0 0 14px rgba(192, 192, 192, 0.2);
+}
+
 /* ── Main App ── */
 .container {
   text-align: center;
@@ -187,8 +308,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 32px;
-  min-height: 160px;
+  margin-bottom: 24px;
+  min-height: 180px;
 }
 
 .coin {
@@ -237,7 +358,7 @@ body {
 }
 
 .result-label {
-  margin-top: 16px;
+  margin-top: 14px;
   font-size: 1.3rem;
   font-weight: 600;
   min-height: 28px;
@@ -246,6 +367,17 @@ body {
 
 .result-label.heads { color: #f0c040; }
 .result-label.tails { color: #aaaaaa; }
+
+.payout-label {
+  margin-top: 6px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  min-height: 24px;
+  letter-spacing: 0.5px;
+}
+
+.payout-label.win { color: #4cff91; }
+.payout-label.lose { color: #ff6b6b; }
 
 /* Button */
 #flip-btn {
@@ -260,7 +392,7 @@ body {
   letter-spacing: 1px;
   transition: transform 0.15s, box-shadow 0.15s, opacity 0.15s;
   box-shadow: 0 4px 20px rgba(240, 192, 64, 0.35);
-  margin-bottom: 36px;
+  margin-bottom: 28px;
 }
 
 #flip-btn:hover:not(:disabled) {
@@ -273,7 +405,7 @@ body {
 }
 
 #flip-btn:disabled {
-  opacity: 0.55;
+  opacity: 0.45;
   cursor: not-allowed;
 }
 
@@ -282,7 +414,7 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 12px;
-  margin-bottom: 36px;
+  margin-bottom: 28px;
 }
 
 .stat-box {
@@ -365,4 +497,5 @@ body {
 @media (max-width: 420px) {
   .stats { grid-template-columns: repeat(2, 1fr); }
   .app-header h1 { font-size: 2rem; }
+  .balance-bar { gap: 12px; }
 }
