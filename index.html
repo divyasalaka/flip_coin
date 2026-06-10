@@ -7,8 +7,41 @@
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="container">
-    <h1>Coin Flip</h1>
+
+  <!-- Auth Screen -->
+  <div class="auth-overlay" id="auth-overlay">
+    <div class="auth-box">
+      <h1 class="auth-title">Coin Flip</h1>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="showTab('login')">Sign In</button>
+        <button class="auth-tab" id="tab-signup" onclick="showTab('signup')">Sign Up</button>
+      </div>
+
+      <form id="auth-form" onsubmit="handleAuth(event)">
+        <div class="auth-field">
+          <label>Username</label>
+          <input type="text" id="auth-username" autocomplete="username" required />
+        </div>
+        <div class="auth-field">
+          <label>Password</label>
+          <input type="password" id="auth-password" autocomplete="current-password" required />
+        </div>
+        <div class="auth-error" id="auth-error"></div>
+        <button type="submit" class="auth-submit" id="auth-submit-btn">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div class="container" id="app" style="display:none">
+    <div class="app-header">
+      <h1>Coin Flip</h1>
+      <div class="user-info">
+        <span id="welcome-msg"></span>
+        <button class="signout-btn" onclick="signOut()">Sign Out</button>
+      </div>
+    </div>
 
     <div class="coin-area">
       <div class="coin" id="coin">

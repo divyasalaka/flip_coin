@@ -1,8 +1,85 @@
-let totalFlips = 0;
-let headsCount = 0;
-let tailsCount = 0;
-let history = [];
+// ── Auth ──────────────────────────────────────────────
+
+let currentUser = null;
 let isFlipping = false;
+
+function getUsers() {
+  return JSON.parse(localStorage.getItem('cf_users') || '{}');
+}
+
+function saveUsers(users) {
+  localStorage.setItem('cf_users', JSON.stringify(users));
+}
+
+function showTab(tab) {
+  document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+  document.getElementById('tab-signup').classList.toggle('active', tab === 'signup');
+  document.getElementById('auth-submit-btn').textContent = tab === 'login' ? 'Sign In' : 'Sign Up';
+  document.getElementById('auth-error').textContent = '';
+  document.getElementById('auth-form').dataset.mode = tab;
+}
+
+function handleAuth(e) {
+  e.preventDefault();
+  const mode = document.getElementById('auth-form').dataset.mode || 'login';
+  const username = document.getElementById('auth-username').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const errorEl = document.getElementById('auth-error');
+  const users = getUsers();
+
+  if (mode === 'signup') {
+    if (users[username]) {
+      errorEl.textContent = 'Username already taken.';
+      return;
+    }
+    users[username] = {
+      password,
+      stats: { total: 0, heads: 0, tails: 0, history: [] }
+    };
+    saveUsers(users);
+    loadUser(username);
+  } else {
+    if (!users[username] || users[username].password !== password) {
+      errorEl.textContent = 'Incorrect username or password.';
+      return;
+    }
+    loadUser(username);
+  }
+}
+
+function loadUser(username) {
+  currentUser = username;
+  localStorage.setItem('cf_current_user', username);
+
+  document.getElementById('auth-overlay').style.display = 'none';
+  document.getElementById('app').style.display = 'block';
+  document.getElementById('welcome-msg').textContent = `Hi, ${username}`;
+
+  const stats = getUsers()[username].stats;
+  syncStatsToDOM(stats);
+  updateHistory(stats.history);
+}
+
+function signOut() {
+  currentUser = null;
+  localStorage.removeItem('cf_current_user');
+  document.getElementById('auth-overlay').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('auth-username').value = '';
+  document.getElementById('auth-password').value = '';
+  document.getElementById('auth-error').textContent = '';
+}
+
+// Auto-login if session exists
+(function init() {
+  const saved = localStorage.getItem('cf_current_user');
+  if (saved && getUsers()[saved]) {
+    loadUser(saved);
+  }
+  document.getElementById('auth-form').dataset.mode = 'login';
+})();
+
+// ── Coin Flip ─────────────────────────────────────────
 
 function flipCoin() {
   if (isFlipping) return;
@@ -17,36 +94,32 @@ function flipCoin() {
   resultLabel.className = 'result-label';
 
   const isHeads = Math.random() < 0.5;
-
-  // Set CSS variable so the coin lands on the correct face
-  // Heads = even multiples of 360 (face forward), Tails = odd (face backward)
-  const baseSpins = 3 * 360; // always spin at least 3 full rotations
+  const baseSpins = 3 * 360;
   const finalRotation = isHeads ? baseSpins : baseSpins + 180;
   coin.style.setProperty('--final-rotation', `${finalRotation}deg`);
 
   coin.classList.remove('flipping');
-  // Force reflow so the animation re-triggers
   void coin.offsetWidth;
   coin.classList.add('flipping');
 
   setTimeout(() => {
     const result = isHeads ? 'heads' : 'tails';
 
-    totalFlips++;
-    if (isHeads) headsCount++;
-    else tailsCount++;
+    const users = getUsers();
+    const stats = users[currentUser].stats;
+    stats.total++;
+    if (isHeads) stats.heads++; else stats.tails++;
+    stats.history.unshift(result);
+    if (stats.history.length > 5) stats.history.pop();
+    saveUsers(users);
 
-    history.unshift(result);
-    if (history.length > 5) history.pop();
-
-    updateStats();
-    updateHistory();
+    syncStatsToDOM(stats);
+    updateHistory(stats.history);
 
     resultLabel.textContent = isHeads ? 'Heads!' : 'Tails!';
     resultLabel.className = `result-label ${result}`;
 
     coin.classList.remove('flipping');
-    // Keep coin showing the correct face after animation
     coin.style.transform = `rotateX(${finalRotation}deg)`;
 
     isFlipping = false;
@@ -54,27 +127,27 @@ function flipCoin() {
   }, 850);
 }
 
-function updateStats() {
-  document.getElementById('total-flips').textContent = totalFlips;
-  document.getElementById('heads-count').textContent = headsCount;
-  document.getElementById('tails-count').textContent = tailsCount;
+function syncStatsToDOM(stats) {
+  document.getElementById('total-flips').textContent = stats.total;
+  document.getElementById('heads-count').textContent = stats.heads;
+  document.getElementById('tails-count').textContent = stats.tails;
 
   const ratioEl = document.getElementById('ratio');
-  if (totalFlips === 0) {
+  if (stats.total === 0) {
     ratioEl.textContent = '—';
-  } else if (tailsCount === 0) {
-    ratioEl.textContent = `${headsCount}:0`;
-  } else if (headsCount === 0) {
-    ratioEl.textContent = `0:${tailsCount}`;
+  } else if (stats.tails === 0) {
+    ratioEl.textContent = `${stats.heads}:0`;
+  } else if (stats.heads === 0) {
+    ratioEl.textContent = `0:${stats.tails}`;
   } else {
-    const gcd = getGCD(headsCount, tailsCount);
-    ratioEl.textContent = `${headsCount / gcd}:${tailsCount / gcd}`;
+    const gcd = getGCD(stats.heads, stats.tails);
+    ratioEl.textContent = `${stats.heads / gcd}:${stats.tails / gcd}`;
   }
 }
 
-function updateHistory() {
+function updateHistory(history) {
   const historyEl = document.getElementById('history');
-  if (history.length === 0) {
+  if (!history.length) {
     historyEl.innerHTML = '<span class="history-placeholder">No flips yet</span>';
     return;
   }
@@ -86,6 +159,3 @@ function updateHistory() {
 function getGCD(a, b) {
   return b === 0 ? a : getGCD(b, a % b);
 }
-
-// Initialize history display
-updateHistory();
