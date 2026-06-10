@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coin Flip</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Coin Flip</h1>
+
+    <div class="coin-area">
+      <div class="coin" id="coin">
+        <div class="coin-face heads">H</div>
+        <div class="coin-face tails">T</div>
+      </div>
+      <div class="result-label" id="result-label"></div>
+    </div>
+
+    <button id="flip-btn" onclick="flipCoin()">Flip Coin</button>
+
+    <div class="stats">
+      <div class="stat-box">
+        <span class="stat-value" id="total-flips">0</span>
+        <span class="stat-label">Total Flips</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value" id="heads-count">0</span>
+        <span class="stat-label">Heads</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value" id="tails-count">0</span>
+        <span class="stat-label">Tails</span>
+      </div>
+      <div class="stat-box">
+        <span class="stat-value" id="ratio">—</span>
+        <span class="stat-label">H : T Ratio</span>
+      </div>
+    </div>
+
+    <div class="history-section">
+      <h2>Last 5 Results</h2>
+      <div class="history" id="history"></div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
